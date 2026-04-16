@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Thettler\ExtendedLocalization\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class ExtendedLocalizationCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'extended-localization';
 
     public $description = 'My command';
 
