@@ -20,6 +20,4 @@ class TestModel extends Model implements Translatable
         'text_nullable' => TranslatableAttribute::class.':nullable',
         'not_translatable' => 'bool',
     ];
-
-
 }

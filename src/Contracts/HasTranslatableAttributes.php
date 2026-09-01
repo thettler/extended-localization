@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Thettler\ExtendedLocalization\Contracts;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Thettler\ExtendedLocalization\TranslatableAttribute;
 
 trait HasTranslatableAttributes
@@ -41,7 +40,7 @@ trait HasTranslatableAttributes
             ->where(function (Builder $query) use ($attribute, $value, $languages) {
                 $languages = $languages ?? config('extended-localization.language_enum')::cases();
                 foreach ($languages as $language) {
-                    $query->orWhere($attribute.'->'.$language->getCode(), 'like',"%{$value}%");
+                    $query->orWhere($attribute.'->'.$language->getCode(), 'like', "%{$value}%");
                 }
             });
     }

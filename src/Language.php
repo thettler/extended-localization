@@ -4,7 +4,7 @@ namespace Thettler\ExtendedLocalization;
 
 use Thettler\ExtendedLocalization\Contracts\HasLanguages;
 
-enum Language: string implements \Thettler\ExtendedLocalization\Contracts\Language
+enum Language: string implements Contracts\Language
 {
     use HasLanguages;
 

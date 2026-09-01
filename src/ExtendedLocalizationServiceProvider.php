@@ -10,14 +10,15 @@ use Thettler\ExtendedLocalization\Commands\ExtendedLocalizationCommand;
 
 class ExtendedLocalizationServiceProvider extends PackageServiceProvider
 {
-
     public function packageRegistered()
     {
         $this->app->bind(TranslatableAttribute::class, function (Application $app, array $translations = []) {
             return new TranslatableAttribute($app['config']['extended-localization.language_enum'], $translations);
         });
     }
-    public function packageBooted(){
+
+    public function packageBooted()
+    {
         Livewire::propertySynthesizer(TranslatableAttributeSynth::class);
     }
 
