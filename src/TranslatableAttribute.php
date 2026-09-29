@@ -15,11 +15,10 @@ use Thettler\ExtendedLocalization\Casts\TranslatableAttributeCast;
 use Thettler\ExtendedLocalization\Contracts\Language;
 use Thettler\ExtendedLocalization\Exceptions\LanguageNotDefinedException;
 
-
 /**
  * @template L of Language&BackedEnum
  */
-final class TranslatableAttribute implements ArrayAccess, Arrayable, Stringable, Castable, \Iterator, Jsonable, \JsonSerializable, Renderable
+final class TranslatableAttribute implements \Iterator, \JsonSerializable, Arrayable, ArrayAccess, Castable, Jsonable, Renderable, Stringable
 {
     private $pointer = 0;
 
@@ -31,9 +30,9 @@ final class TranslatableAttribute implements ArrayAccess, Arrayable, Stringable,
         protected string $languageEnum,
         protected array $translations = []
     ) {
-        if (!enum_exists($languageEnum) || !is_subclass_of($languageEnum, Language::class)) {
+        if (! enum_exists($languageEnum) || ! is_subclass_of($languageEnum, Language::class)) {
             throw new \InvalidArgumentException(
-                "The given language enum does not exist or is not a subclass of ".Language::class
+                'The given language enum does not exist or is not a subclass of '.Language::class
             );
         }
 
@@ -45,7 +44,7 @@ final class TranslatableAttribute implements ArrayAccess, Arrayable, Stringable,
      */
     public static function new($translations = []): static
     {
-        return app(static::class, $translations);
+        return app(self::class, $translations);
     }
 
     public function __invoke()
@@ -55,7 +54,7 @@ final class TranslatableAttribute implements ArrayAccess, Arrayable, Stringable,
 
     public function __toString(): string
     {
-        return (string)$this->getTranslation();
+        return (string) $this->getTranslation();
     }
 
     public function __get(string $language)
@@ -149,13 +148,14 @@ final class TranslatableAttribute implements ArrayAccess, Arrayable, Stringable,
             LanguageNotDefinedException::throw($languageToParse, $this->languageEnum);
         }
 
-        if (!($language instanceof $this->languageEnum)) {
+        if (! ($language instanceof $this->languageEnum)) {
             $languageClass = $language::class;
 
             throw new \InvalidArgumentException(
                 "The given language ({$languageClass}) does not match the language in the TranslatableAttribute ({$this->languageEnum})."
             );
         }
+
         return $language;
     }
 

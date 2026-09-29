@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-
 use Thettler\ExtendedLocalization\Exceptions\LanguageNotDefinedException;
 use Thettler\ExtendedLocalization\Language;
+use Thettler\ExtendedLocalization\Tests\Fixtures\WrongLanguage;
 use Thettler\ExtendedLocalization\TranslatableAttribute;
 
 it('can create TranslatableAttribute', function () {
@@ -51,7 +51,7 @@ it('cannot create TranslatableAttribute with not defined Language', function () 
 it('cannot use different Language Enum for TranslatableAttribute', function () {
     new TranslatableAttribute(Language::class, [
         'de' => 'Deutsch',
-    ])->getTranslation(\Thettler\ExtendedLocalization\Tests\Fixtures\WrongLanguage::Foo);
+    ])->getTranslation(WrongLanguage::Foo);
 })->throws(
     InvalidArgumentException::class,
     'The given language (Thettler\ExtendedLocalization\Tests\Fixtures\WrongLanguage) does not match the language in the TranslatableAttribute (Thettler\ExtendedLocalization\Language).'
@@ -112,9 +112,9 @@ it('can be stringified', function () {
         'en' => 'English',
     ]);
 
-    expect((string)$translatableAttribute)->toBe('Deutsch');
+    expect((string) $translatableAttribute)->toBe('Deutsch');
     app()->setLocale('en');
-    expect((string)$translatableAttribute)->toBe('English');
+    expect((string) $translatableAttribute)->toBe('English');
 });
 
 it('can be transformed to Json', function () {
@@ -172,4 +172,3 @@ it('can be iterated', function () {
 });
 
 it('can search with scope for translated attribute')->skip();
-

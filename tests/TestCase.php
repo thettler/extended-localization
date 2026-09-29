@@ -38,6 +38,7 @@ class TestCase extends Orchestra
          }
          */
     }
+
     protected function setUpDatabase()
     {
         Schema::create('test_models', function (Blueprint $table) {

@@ -1,6 +1,8 @@
 <?php
 
+use Thettler\ExtendedLocalization\Language;
+
 // config for Thettler/ExtendedLocalization
 return [
-    'language_enum' => \Thettler\ExtendedLocalization\Language::class,
+    'language_enum' => Language::class,
 ];

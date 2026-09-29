@@ -1,5 +1,7 @@
 <?php
 
+use Thettler\ExtendedLocalization\Exceptions\LanguageNotDefinedException;
+use Thettler\ExtendedLocalization\Exceptions\TranslatableAttributeNotNullableException;
 use Thettler\ExtendedLocalization\Tests\Fixtures\TestModel;
 use Thettler\ExtendedLocalization\TranslatableAttribute;
 
@@ -10,7 +12,7 @@ it('can save Translatable Attribute to database', function () {
         ]),
     ]);
 
-    \Pest\Laravel\assertDatabaseHas('test_models', ['text' => '{"de":"Deutsch"}', 'text_nullable' => null,]);
+    \Pest\Laravel\assertDatabaseHas('test_models', ['text' => '{"de":"Deutsch"}', 'text_nullable' => null]);
 });
 
 it('can get Translatable Attribute from database', function () {
@@ -41,12 +43,12 @@ it('can throw error if non nullable attribute is null', function () {
         'text' => null,
     ]);
 })->throws(
-    \Thettler\ExtendedLocalization\Exceptions\TranslatableAttributeNotNullableException::class,
+    TranslatableAttributeNotNullableException::class,
     'The TranslatableAttribute "text" in Thettler\ExtendedLocalization\Tests\Fixtures\TestModel is not nullable. Try adding nullable to the cast if you want to allow null values: "text" => TranslatableAttribute::class.\':nullable\''
 );
 
 it('can parse array to TranslationAttribute', function () {
-    $model = new TestModel();
+    $model = new TestModel;
 
     $model->text = ['de' => 'deutsch'];
 
@@ -56,16 +58,16 @@ it('can parse array to TranslationAttribute', function () {
 });
 
 it('can not parse array to TranslationAttribute if language does not exist', function () {
-    $model = new TestModel();
+    $model = new TestModel;
 
     $model->text = ['not_existing' => 'deutsch'];
 })->throws(
-    \Thettler\ExtendedLocalization\Exceptions\LanguageNotDefinedException::class,
+    LanguageNotDefinedException::class,
     'Language "not_existing" does not exist in Language Enum. Available languages: en, de'
 );
 
 it('can get all translatable attributes', function () {
-    $model = new TestModel();
+    $model = new TestModel;
 
     expect($model->getTranslatableAttributes())->toBe([
         'text',
@@ -73,11 +75,8 @@ it('can get all translatable attributes', function () {
     ]);
 });
 it('can check if attribute is translatable', function () {
-    $model = new TestModel();
+    $model = new TestModel;
 
     expect($model->isTranslatableAttribute('text'))->toBeTrue();
     expect($model->isTranslatableAttribute('not_translatable'))->toBeFalse();
 });
-
-
-
