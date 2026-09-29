@@ -159,7 +159,7 @@ final class TranslatableAttribute implements ArrayAccess, Arrayable, Stringable,
         return $language;
     }
 
-    protected function setTranslations(array $translations): static
+    public function setTranslations(array $translations): static
     {
         foreach ($translations as $locale => $translation) {
             $this->setTranslation($locale, $translation);
