@@ -56,6 +56,6 @@ trait HasTranslatableAttributes
             return parent::getAttribute($key);
         }
 
-        return $this->{$segments[0]}->getTranslation($segments[1]);
+        return $this->{$segments[0]}?->getTranslation($segments[1]);
     }
 }
