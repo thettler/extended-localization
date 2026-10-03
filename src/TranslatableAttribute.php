@@ -25,10 +25,12 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
     /**
      * @param  class-string<L>  $languageEnum
      * @param  array<value-of<L>, mixed>  $translations
+     * @param  value-of<L>|null $fallback
      */
     public function __construct(
         protected string $languageEnum,
-        protected array $translations = []
+        protected array $translations = [],
+        protected ?Language $fallback = null
     ) {
         if (! enum_exists($languageEnum) || ! is_subclass_of($languageEnum, Language::class)) {
             throw new \InvalidArgumentException(
@@ -95,7 +97,7 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
         return $this;
     }
 
-    public function getTranslation(null|string|(BackedEnum&Language) $language = null): mixed
+    public function getTranslation(null|string|(BackedEnum&Language) $language = null, null|string|(BackedEnum&Language) $fallback = null): mixed
     {
         if (is_null($language)) {
             $language = app()->getLocale();
@@ -103,7 +105,17 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
 
         $language = $this->parseLanguageCode($language);
 
-        return $this->translations[$language->value] ?? null;
+        $translation =  $this->translations[$language->value] ?? null;
+
+        if ($translation){
+            return $translation;
+        }
+
+        if ($fallback || $this->fallback){
+            return $this->getTranslation($fallback ?? $this->fallback);
+        }
+
+        return null;
     }
 
     public function getTranslations(): array

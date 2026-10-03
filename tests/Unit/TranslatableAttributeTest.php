@@ -172,3 +172,20 @@ it('can be iterated', function () {
 });
 
 it('can search with scope for translated attribute')->skip();
+
+it('can fallback to different language', function () {
+    $value = [
+        'en' => 'English',
+    ];
+
+    $translatableAttribute = new TranslatableAttribute(Language::class, $value);
+
+    expect($translatableAttribute->getTranslation(Language::German))->toBeNull();
+    expect($translatableAttribute->getTranslation(Language::German, Language::German))->toBeNull();
+    expect($translatableAttribute->getTranslation(Language::German, Language::English))->toBe('English');
+
+    $translatableAttribute = new TranslatableAttribute(Language::class, $value, Language::English);
+
+    expect($translatableAttribute->getTranslation(Language::German))->toBe('English');
+    expect($translatableAttribute->getTranslation(Language::German, Language::English))->toBe('English');
+});
