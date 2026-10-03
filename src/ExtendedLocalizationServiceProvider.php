@@ -13,7 +13,11 @@ class ExtendedLocalizationServiceProvider extends PackageServiceProvider
     public function packageRegistered()
     {
         $this->app->bind(TranslatableAttribute::class, function (Application $app, array $translations = []) {
-            return new TranslatableAttribute($app['config']['extended-localization.language_enum'], $translations);
+            return new TranslatableAttribute(
+                languageEnum: $app['config']['extended-localization.language_enum'],
+                translations: $translations,
+                fallback: $app['config']['extended-localization.fallback'] ?? null
+            );
         });
     }
 
