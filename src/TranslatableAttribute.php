@@ -18,21 +18,22 @@ use Thettler\ExtendedLocalization\Exceptions\LanguageNotDefinedException;
 /**
  * @template L of Language&BackedEnum
  */
-final class TranslatableAttribute implements \Iterator, \JsonSerializable, Arrayable, ArrayAccess, Castable, Jsonable, Renderable, Stringable
+final class TranslatableAttribute implements \Iterator, \JsonSerializable, Arrayable, ArrayAccess, Castable, Jsonable,
+                                             Renderable, Stringable
 {
     private $pointer = 0;
 
     /**
      * @param  class-string<L>  $languageEnum
      * @param  array<value-of<L>, mixed>  $translations
-     * @param  value-of<L>|null $fallback
+     * @param  value-of<L>|null  $fallback
      */
     public function __construct(
         protected string $languageEnum,
         protected array $translations = [],
         protected ?Language $fallback = null
     ) {
-        if (! enum_exists($languageEnum) || ! is_subclass_of($languageEnum, Language::class)) {
+        if (!enum_exists($languageEnum) || !is_subclass_of($languageEnum, Language::class)) {
             throw new \InvalidArgumentException(
                 'The given language enum does not exist or is not a subclass of '.Language::class
             );
@@ -56,7 +57,7 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
 
     public function __toString(): string
     {
-        return (string) $this->getTranslation();
+        return (string)$this->getTranslation();
     }
 
     public function __get(string $language)
@@ -78,7 +79,7 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
     {
         $language = $this->parseLanguageCode($language);
 
-        return isset($this->translations[$language->value]);
+        return isset($this->translations[$language->getCode()]);
     }
 
     public function isTranslationEmpty(string|(BackedEnum&Language) $language): bool
@@ -92,27 +93,29 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
     {
         $language = $this->parseLanguageCode($language);
 
-        $this->translations[$language->value] = $value;
+        $this->translations[$language->getCode()] = $value;
 
         return $this;
     }
 
-    public function getTranslation(null|string|(BackedEnum&Language) $language = null, null|string|(BackedEnum&Language) $fallback = null): mixed
-    {
+    public function getTranslation(
+        null|string|(BackedEnum&Language) $language = null,
+        null|string|(BackedEnum&Language) $fallback = null
+    ): mixed {
         if (is_null($language)) {
             $language = app()->getLocale();
         }
 
         $language = $this->parseLanguageCode($language);
 
-        $translation =  $this->translations[$language->value] ?? null;
+        $translation = $this->translations[$language->getCode()] ?? null;
 
-        if ($translation){
+        if ($translation) {
             return $translation;
         }
 
-        if ($fallback || $this->fallback){
-            return $this->getTranslation($fallback ?? $this->fallback);
+        if ($fallback || $this->fallback) {
+            return $this->translations[($fallback ?? $this->fallback)->getCode()] ?? null;
         }
 
         return null;
@@ -142,7 +145,7 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
     {
         $language = $this->parseLanguageCode($offset);
 
-        unset($this->translations[$language->value]);
+        unset($this->translations[$language->getCode()]);
     }
 
     public function toJson($options = 0): string
@@ -160,7 +163,7 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
             LanguageNotDefinedException::throw($languageToParse, $this->languageEnum);
         }
 
-        if (! ($language instanceof $this->languageEnum)) {
+        if (!($language instanceof $this->languageEnum)) {
             $languageClass = $language::class;
 
             throw new \InvalidArgumentException(
