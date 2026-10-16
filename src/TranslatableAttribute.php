@@ -100,7 +100,7 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
 
     public function getTranslation(
         null|string|(BackedEnum&Language) $language = null,
-        null|string|(BackedEnum&Language) $fallback = null
+        null|string|false|(BackedEnum&Language) $fallback = null
     ): mixed {
         if (is_null($language)) {
             $language = app()->getLocale();
@@ -112,6 +112,10 @@ final class TranslatableAttribute implements \Iterator, \JsonSerializable, Array
 
         if ($translation) {
             return $translation;
+        }
+
+        if ($fallback === false) {
+            return null;
         }
 
         if ($fallback || $this->fallback) {

@@ -189,3 +189,14 @@ it('can fallback to different language', function () {
     expect($translatableAttribute->getTranslation(Language::German))->toBe('English');
     expect($translatableAttribute->getTranslation(Language::German, Language::English))->toBe('English');
 });
+
+it('can deactivate fallback', function () {
+    $value = [
+        'en' => 'English',
+    ];
+    $translatableAttribute = new TranslatableAttribute(Language::class, $value, Language::English);
+
+    expect($translatableAttribute->getTranslation(Language::German))->toBe('English');
+    expect($translatableAttribute->getTranslation(Language::German, Language::English))->toBe('English');
+    expect($translatableAttribute->getTranslation(Language::German, false))->toBeNull();
+});
