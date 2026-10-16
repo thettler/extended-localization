@@ -2,6 +2,10 @@
 
 All notable changes to `extended-localization` will be documented in this file.
 
+## v0.0.7 - 2026-10-16
+
+**Full Changelog**: https://github.com/thettler/extended-localization/compare/v0.0.6...v0.0.7
+
 ## v0.0.6 - 2026-10-04
 
 **Full Changelog**: https://github.com/thettler/extended-localization/compare/v0.0.4...v0.0.6
